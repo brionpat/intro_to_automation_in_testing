@@ -2,9 +2,9 @@ package backend.utils;
 
 public class Pet {
 
-    public String id;
-    public String name;
-    public String categoryId;
-    public String categoryName;
-    public String status;
+    public static String id;
+    public static String name;
+    public static String categoryId;
+    public static String categoryName;
+    public static String status;
 }

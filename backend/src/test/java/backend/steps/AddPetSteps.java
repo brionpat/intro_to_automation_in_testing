@@ -4,35 +4,38 @@ import backend.utils.Pet;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
+import static backend.utils.Globals.RESPONSE_OK;
+import static backend.utils.Globals.URL_BASE;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AddPetSteps {
 
-    private Pet pet;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddPetSteps.class);
 
-    public AddPetSteps(Pet pet) {
-        this.pet = pet;
-    }
+    private String petName;
 
     @When("the user adds a new pet with {string} name, {string}, and {string} status")
     public void the_user_adds_a_new_pet_with_name_and_status(String name, String category, String status) {
-        pet.name = given().contentType(ContentType.JSON)
+        Pet.name = given().contentType(ContentType.JSON)
                 .body(makePet(name, category, status))
-                .when().post("https://petstore.swagger.io/v2/pet")
-                .then().statusCode(200)
+                .when().post(String.format("%s", URL_BASE))
+                .then().statusCode(RESPONSE_OK)
                 .extract().path("name");
     }
 
     private String makePet(String name, String category, String status) {
-        pet.id = String.valueOf(Math.abs(new Random().nextInt()));
-        pet.categoryId = String.valueOf(Math.abs(new Random().nextInt()));
-        pet.name = name;
-        pet.categoryName = category;
-        pet.status = status;
+        Pet.id = String.valueOf(Math.abs(new Random().nextInt()));
+        LOGGER.info(String.format("Pet Id added: %s", Pet.id));
+        Pet.categoryId = String.valueOf(Math.abs(new Random().nextInt()));
+        Pet.name = petName = name;
+        Pet.categoryName = category;
+        Pet.status = status;
 
         return String.format(
                 "{\n" +
@@ -46,17 +49,17 @@ public class AddPetSteps {
                         "  \"tags\": [],\n" +
                         "  \"status\": \"%s\"\n" +
                         "}",
-                pet.id,
-                pet.categoryId,
-                pet.categoryName,
-                pet.name,
-                pet.status
+                Pet.id,
+                Pet.categoryId,
+                Pet.categoryName,
+                Pet.name,
+                Pet.status
         );
     }
 
 
     @Then("the pet name is {string}")
     public void thePetNameIs(String petName) {
-        assertThat(petName).isEqualTo(this.pet.name);
+        assertThat(petName).isEqualTo(petName);
     }
 }
