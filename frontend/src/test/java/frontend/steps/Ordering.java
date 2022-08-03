@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static frontend.utils.Delay.delay;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Ordering {
@@ -38,25 +39,20 @@ public class Ordering {
 
     @When("navigate to category {string}")
     public void navigateToCategory(String category) {
-        FluentWait wait = new FluentWait(driver);
-        wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState")
-                .equals("complete"));
-
         driver.findElement(By.xpath(
                 String.format("//*[@id=\"itemc\" " +
                         "and contains(@onclick,'byCat') a" +
                         "nd contains(text(),\"%s\")]", category))).click();
+
+        delay(700);
     }
 
     @When("navigate to menu {string}")
     public void navigateToMenu(String menu) {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(
-                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-
         driver.findElement(By.xpath(
                 String.format("//*[@id=\"navbarExample\"]/ul" +
                         "//a[contains(text(),\"%s\")]", menu))).click();
+        delay(700);
     }
 
     @When("click on {string}")
