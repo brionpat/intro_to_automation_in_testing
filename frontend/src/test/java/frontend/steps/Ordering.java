@@ -53,6 +53,7 @@ public class Ordering {
         driver.findElement(By.xpath(
                 String.format("//*[@id=\"navbarExample\"]/ul" +
                         "//a[contains(text(),\"%s\")]", menu))).click();
+        
         delay(700);
     }
 
@@ -91,7 +92,7 @@ public class Ordering {
     }
 
     @And("delete {string} from the cart")
-    public void deleteFromTheCart(String product) throws InterruptedException {
+    public void deleteFromTheCart(String product) {
         By elementPath = By.xpath(
                 String.format("//*[@id=\"tbodyid\"]//td[contains(text(),\"%s\")]" +
                         "//ancestor::tr" +
